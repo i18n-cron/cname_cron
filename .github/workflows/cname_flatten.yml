@@ -1,0 +1,36 @@
+name: cname flatten
+
+permissions: write-all
+
+env:
+  TZ: Asia/Shanghai
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 分钟 小时 日期 月份 星期（0-6）//0代表星期天
+    - cron: '5 * * * *'
+    - cron: '9 * * * *'
+    - cron: '24 * * * *'
+    - cron: '39 * * * *'
+    - cron: '53 * * * *'
+  push:
+    branches: [ main ]
+    tags:
+      - v*
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-it:
+    runs-on: ubuntu-latest
+    name: cname flatten
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: ./run.sh
+        env:
+         HW_AK: ${{ secrets.HW_AK }}
+         HW_SK: ${{ secrets.HW_SK }}
